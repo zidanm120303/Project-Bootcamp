@@ -51,7 +51,7 @@ class BookingAvailabilityService
 
         return $available >= $qty
             ? $this->result(true, $available, "Tersedia {$available} unit pada tanggal yang dipilih.")
-            : $this->result(false, $available, "Stok hanya tersisa {$available} unit pada tanggal tersebut.");
+            : $this->result(false, $available, "");
     }
 
     private function result(bool $available, int $stock, string $message): array
