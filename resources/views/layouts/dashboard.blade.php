@@ -70,7 +70,7 @@ $menus = [
                 @endforeach
             </nav>
             <div class="border-t border-slate-200 pt-4">
-                <a href="{{ route('home') }}" class="flex items-center gap-3 rounded-xl px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50"><x-icon name="store" />Lihat Marketplace</a>
+                <a href="{{ route('catalog') }}" class="flex items-center gap-3 rounded-xl px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50"><x-icon name="store" />Lihat Marketplace</a>
                 <form action="{{ route('logout') }}" method="POST">@csrf<button class="mt-1 flex w-full items-center gap-3 rounded-xl px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-rose-50 hover:text-rose-600"><x-icon name="logout" />Keluar</button></form>
             </div>
         </aside>

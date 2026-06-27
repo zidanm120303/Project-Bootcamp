@@ -16,7 +16,7 @@
     <header class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
         <div class="container-app flex h-[72px] items-center justify-between">
             <a href="{{ route('home') }}"><x-application-logo /></a>
-            <nav class="hidden items-center gap-8 lg:flex">
+            <!-- <nav class="hidden items-center gap-8 lg:flex">
                 <a href="{{ route('home') }}"
                     class="text-sm font-bold {{ request()->routeIs('home') ? 'text-indigo-600' : 'text-slate-600 hover:text-indigo-600' }}">Beranda</a>
                 <a href="{{ route('catalog') }}"
@@ -27,7 +27,7 @@
                     class="text-sm font-bold text-slate-600 hover:text-indigo-600">Mitra</a>
                 <a href="{{ route('home') }}#bantuan"
                     class="text-sm font-bold text-slate-600 hover:text-indigo-600">Bantuan</a>
-            </nav>
+            </nav> -->
             <div class="hidden items-center gap-3 lg:flex">
                 @auth
                     <a href="{{ route(auth()->user()->role . '.dashboard') }}" class="btn-secondary py-2.5">Dashboard</a>

@@ -7,7 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-    <header class="border-b border-slate-200 bg-white"><div class="container-app flex h-[72px] items-center justify-between"><a href="{{ route('home') }}"><x-application-logo /></a><div class="flex items-center gap-3"><a href="{{ route((auth()->user()->role ?: 'customer').'.dashboard') }}" class="btn-secondary py-2">Kembali ke dashboard</a><form method="POST" action="{{ route('logout') }}">@csrf<button class="rounded-xl p-2 text-slate-500 hover:bg-rose-50 hover:text-rose-600"><x-icon name="logout" /></button></form></div></div></header>
+    <header class="border-b border-slate-200 bg-white"><div class="container-app flex h-[72px] items-center justify-between"><a href="{{ route('home') }}"><x-application-logo /></a><div class="flex items-center gap-3"><a href="{{ route((auth()->user()->role ?: 'customer').'.dashboard') }}" class="btn-secondary py-2">dashboard</a></div></div></header>
     @if(isset($header))<div class="border-b border-slate-200 bg-white"><div class="container-app py-6">{{ $header }}</div></div>@endif
     <main>{{ $slot }}</main>
 </body>
