@@ -1,0 +1,23 @@
+@props(['name', 'class' => 'h-5 w-5'])
+@php
+$paths = [
+    'home' => '<path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955a1.125 1.125 0 0 1 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/>',
+    'grid' => '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75h6v6h-6v-6Zm10.5 0h6v6h-6v-6Zm-10.5 10.5h6v6h-6v-6Zm10.5 0h6v6h-6v-6Z"/>',
+    'box' => '<path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25M21 7.5v9l-9 5.25m0-9L3 7.5m9 5.25v9M3 7.5v9l9 5.25"/>',
+    'calendar' => '<path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3.75 8.25h16.5M5.25 4.5h13.5c.828 0 1.5.672 1.5 1.5v13.5c0 .828-.672 1.5-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V6c0-.828.672-1.5 1.5-1.5Z"/>',
+    'card' => '<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M3.75 5.25h16.5c.828 0 1.5.672 1.5 1.5v10.5c0 .828-.672 1.5-1.5 1.5H3.75a1.5 1.5 0 0 1-1.5-1.5V6.75c0-.828.672-1.5 1.5-1.5Z"/>',
+    'users' => '<path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72M18 18.72v-.003c0-1.115-.436-2.175-1.223-2.963A4.19 4.19 0 0 0 13.815 14.5h-3.63a4.19 4.19 0 0 0-2.962 1.254A4.19 4.19 0 0 0 6 18.717v.003M18 18.72a8.93 8.93 0 0 1-6 2.28 8.93 8.93 0 0 1-6-2.28M15.75 7.5a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"/>',
+    'store' => '<path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5H6V21m12 0v-7.5m3-6-2.25-4.5H5.25L3 7.5m18 0v1.125a2.625 2.625 0 0 1-5.25 0A2.625 2.625 0 0 1 10.5 8.625a2.625 2.625 0 0 1-5.25 0A2.625 2.625 0 0 1 3 7.5M21 7.5V21H3V7.5"/>',
+    'shield' => '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m6-3c0 7.142-3.036 12.176-9 14.25-5.964-2.074-9-7.108-9-14.25 2.302-.166 4.318-1.016 6-2.542C10.682 5.734 12.698 6.584 15 6.75c2.302-.166 4.318-1.016 6-2.542V6.75Z"/>',
+    'alert' => '<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9.303 3.376c.866 1.5-.217 3.374-1.948 3.374H4.645c-1.73 0-2.813-1.874-1.948-3.374l7.355-12.75c.866-1.5 3.032-1.5 3.898 0l7.353 12.75ZM12 16.5h.008v.008H12V16.5Z"/>',
+    'chart' => '<path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7.5 16.5v-6m4.5 6v-12m4.5 12V8.25"/>',
+    'settings' => '<path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.592c.55 0 1.02.398 1.11.94l.213 1.28c.063.374.313.686.645.87.333.183.73.232 1.079.084l1.195-.51a1.125 1.125 0 0 1 1.37.49l1.296 2.245c.275.476.163 1.08-.262 1.43l-1.006.827a1.125 1.125 0 0 0-.418 1.157c.07.369.275.7.568.943l1.006.827c.425.35.537.954.262 1.43l-1.296 2.245a1.125 1.125 0 0 1-1.37.49l-1.195-.51a1.125 1.125 0 0 0-1.079.084 1.125 1.125 0 0 0-.645.87l-.213 1.28c-.09.542-.56.94-1.11.94h-2.592c-.55 0-1.02-.398-1.11-.94l-.213-1.28a1.125 1.125 0 0 0-.645-.87 1.125 1.125 0 0 0-1.079-.084l-1.195.51a1.125 1.125 0 0 1-1.37-.49L3.94 14.563a1.125 1.125 0 0 1 .262-1.43l1.006-.827c.293-.242.497-.574.568-.943a1.125 1.125 0 0 0-.418-1.157L4.352 9.38a1.125 1.125 0 0 1-.262-1.43L5.386 5.7a1.125 1.125 0 0 1 1.37-.49l1.195.51c.35.148.746.1 1.079-.084.332-.184.582-.496.645-.87l.213-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>',
+    'search' => '<path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.197 5.197a7.5 7.5 0 0 0 10.606 10.606Z"/>',
+    'star' => '<path stroke-linecap="round" stroke-linejoin="round" d="m11.48 3.499-2.62 5.31-5.86.851 4.24 4.132-1.001 5.836L11.48 16.87l5.241 2.758-1.001-5.836 4.24-4.132-5.86-.851-2.62-5.31Z"/>',
+    'location' => '<path stroke-linecap="round" stroke-linejoin="round" d="M12 21s7.5-4.35 7.5-11.25a7.5 7.5 0 1 0-15 0C4.5 16.65 12 21 12 21Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 12.75a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>',
+    'menu' => '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>',
+    'x' => '<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>',
+    'logout' => '<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6A2.25 2.25 0 0 0 5.25 5.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3-6 3 3m0 0-3 3m3-3H9"/>',
+];
+@endphp
+<svg {{ $attributes->merge(['class' => $class]) }} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">{!! $paths[$name] ?? $paths['grid'] !!}</svg>

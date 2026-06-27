@@ -1,0 +1,8 @@
+@extends('layouts.dashboard')
+@section('title','Monitoring Booking')
+@section('page-title','Monitoring Booking')
+@section('page-subtitle','Pantau transaksi dari seluruh mitra.')
+@section('content')
+<form class="mb-5 grid gap-3 sm:grid-cols-[1fr_220px_auto]"><input name="q" value="{{ request('q') }}" class="input" placeholder="Cari kode booking..."><select name="status" class="input"><option value="">Semua status</option>@foreach(['pending','waiting_payment','paid','prepared','ongoing','completed','cancelled','rejected','disputed'] as $status)<option value="{{ $status }}" @selected(request('status')===$status)>{{ str($status)->replace('_',' ')->title() }}</option>@endforeach</select><button class="btn-primary">Filter</button></form>
+<div class="table-shell"><table class="data-table"><thead><tr><th>Booking</th><th>Customer</th><th>Mitra</th><th>Jadwal</th><th>Total</th><th>Pembayaran</th><th>Status</th></tr></thead><tbody>@foreach($bookings as $booking)<tr><td><p class="font-bold text-indigo-600">{{ $booking->booking_code }}</p><p class="mt-1 max-w-[180px] truncate text-xs text-slate-400">{{ $booking->items->first()->product->name }}</p></td><td>{{ $booking->customer->name }}</td><td>{{ $booking->partner->business_name }}</td><td class="whitespace-nowrap">{{ $booking->start_at?->translatedFormat('d M') }}–{{ $booking->end_at?->translatedFormat('d M Y') }}</td><td class="font-extrabold text-ink">Rp{{ number_format($booking->total_amount,0,',','.') }}</td><td><x-status-badge :status="$booking->payment_status" /></td><td><x-status-badge :status="$booking->status" /></td></tr>@endforeach</tbody></table></div><div class="mt-6">{{ $bookings->links() }}</div>
+@endsection
