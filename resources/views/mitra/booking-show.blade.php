@@ -1,12 +1,13 @@
 @extends('layouts.dashboard')
 @section('title', 'Pesanan '.$booking->booking_code)
 @section('page-title', 'Detail Pesanan Sewa')
-@section('page-subtitle', $booking->booking_code)
+
 @section('content')
 @php $item = $booking->items->first(); @endphp
 
 {{-- Header --}}
 <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+   
     <div>
         <p class="text-xs font-semibold uppercase tracking-widest text-slate-400">Kode pengambilan</p>
         <p class="text-2xl font-black tracking-wide text-indigo-600">{{ $booking->booking_code }}</p>
@@ -53,7 +54,7 @@
         {{-- Data Customer --}}
         <section class="card p-4 sm:p-5">
             <div class="flex flex-wrap items-center justify-between gap-2">
-                <h2 class="font-extrabold text-ink">Validasi customer</h2>
+                <h2 class="font-extrabold text-ink">Indentitas Customer</h2>
                 @if($booking->identity_file)
                 <a href="{{ route('bookings.identity', $booking) }}" class="text-sm font-bold text-indigo-600">Lihat identitas &rarr;</a>
                 @endif

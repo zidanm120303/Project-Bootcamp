@@ -38,8 +38,8 @@
         <section class="card p-6">
             <h2 class="font-extrabold text-ink">Harga, stok, dan lokasi</h2>
             <div class="mt-5 grid gap-5 sm:grid-cols-2">
-                <div><label class="label">Harga sewa per hari</label><input type="number" name="price" value="{{ old('price', $product->price) }}" class="input" min="1000" required></div>
-                <div><label class="label">Deposit keamanan per unit</label><input type="number" name="security_deposit" value="{{ old('security_deposit', $product->security_deposit ?? 0) }}" class="input" min="0"></div>
+                <div><label class="label">Harga sewa per hari</label><div class="flex items-center gap-2"><span class="text-slate-600 font-semibold">Rp</span><input type="text" inputmode="numeric" value="{{ old('price', $product->price) ? number_format($product->price, 0, ',', '.') : '' }}" class="input flex-1 currency-display" placeholder="0" required></div><input type="hidden" name="price" class="currency-value"></div>
+                <div><label class="label">Deposit keamanan per unit</label><div class="flex items-center gap-2"><span class="text-slate-600 font-semibold">Rp</span><input type="text" inputmode="numeric" value="{{ old('security_deposit', $product->security_deposit ?? 0) ? number_format($product->security_deposit, 0, ',', '.') : '' }}" class="input flex-1 currency-display" placeholder="0"></div><input type="hidden" name="security_deposit" class="currency-value"></div>
                 <div><label class="label">Jumlah unit fisik</label><input type="number" name="stock_total" value="{{ old('stock_total', $product->stock_total ?: 1) }}" class="input" min="1" required></div>
                 <div><label class="label">Minimal durasi (hari)</label><input type="number" name="min_rent_duration" value="{{ old('min_rent_duration', $product->min_rent_duration ?: 1) }}" class="input" min="1" required></div>
                 <div><label class="label">Kota pengambilan</label><input name="location_city" value="{{ old('location_city', $product->location_city) }}" class="input" required></div>
@@ -68,4 +68,42 @@
         <div class="mt-5 space-y-3"><button name="submit_review" value="1" class="btn-primary w-full" @disabled(auth()->user()->partnerProfile?->verification_status !== 'verified')>Ajukan untuk ditinjau</button><button name="submit_review" value="0" class="btn-secondary w-full">Simpan draf</button></div>
     </aside>
 </form>
+
+<script>
+document.querySelectorAll('.currency-display').forEach(display => {
+    const hiddenInput = display.parentElement.nextElementSibling;
+    
+    if (display.value) {
+        hiddenInput.value = display.value.replace(/[^0-9]/g, '');
+    }
+    
+    display.addEventListener('input', function() {
+        let value = this.value.replace(/[^0-9]/g, '');
+        
+        if (value) {
+            this.value = parseInt(value).toLocaleString('id-ID');
+            hiddenInput.value = value;
+        } else {
+            this.value = '';
+            hiddenInput.value = '';
+        }
+    });
+    
+    display.addEventListener('blur', function() {
+        if (this.value && !isNaN(parseInt(this.value.replace(/[^0-9]/g, '')))) {
+            let value = this.value.replace(/[^0-9]/g, '');
+            this.value = parseInt(value).toLocaleString('id-ID');
+            hiddenInput.value = value;
+        }
+    });
+});
+
+document.querySelector('form').addEventListener('submit', function(e) {
+    document.querySelectorAll('.currency-display').forEach(display => {
+        const hiddenInput = display.parentElement.nextElementSibling;
+        let value = display.value.replace(/[^0-9]/g, '');
+        hiddenInput.value = value;
+    });
+});
+</script>
 @endsection

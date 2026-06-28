@@ -79,7 +79,7 @@ $menus = [
                 <div class="mb-7 flex items-start justify-between gap-4">
                     <div class="flex items-start gap-3">
                         <button @click="sidebar=true" class="mt-0.5 rounded-xl border border-slate-200 bg-white p-2 shadow-sm lg:hidden"><x-icon name="menu" /></button>
-                        <div><p class="text-[11px] font-extrabold uppercase tracking-[.18em] text-indigo-500">{{ match($role) {'admin' => 'Panel Admin', 'mitra' => 'Panel Mitra', default => 'Akun Customer'} }}</p><h1 class="mt-1 text-2xl font-black tracking-tight text-ink">@yield('page-title','Dashboard')</h1><p class="mt-1 text-sm text-slate-500">@yield('page-subtitle','Kelola aktivitas Anda dalam satu tempat.')</p></div>
+                        <div><p class="text-[11px] font-extrabold uppercase tracking-[.18em] text-indigo-500">{{ match($role) {'admin' => 'Panel Admin', 'mitra' => 'Panel Mitra', default => 'Akun Customer'} }}</p><h1 class="mt-1 text-2xl font-black tracking-tight text-ink">@yield('page-title','Dashboard')</h1></div>
                     </div>
                     <a href="{{ route('profile.edit') }}" class="flex shrink-0 items-center gap-3 rounded-2xl border border-slate-200 bg-white p-2 pr-3 shadow-sm transition hover:border-indigo-200 hover:shadow-md">
                         @if(auth()->user()->avatar_url)<img src="{{ auth()->user()->avatar_url }}" class="h-10 w-10 rounded-xl object-cover" alt="">@else<span class="grid h-10 w-10 place-items-center rounded-xl bg-indigo-100 font-extrabold text-indigo-700">{{ str(auth()->user()->name)->substr(0,1) }}</span>@endif
