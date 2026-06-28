@@ -30,7 +30,7 @@ $menus = [
         <aside :class="sidebar ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-50 flex w-[270px] flex-col border-r border-slate-200 bg-white px-5 py-6 transition lg:translate-x-0">
             <div class="flex items-center justify-between"><a href="{{ route('home') }}"><x-application-logo /></a><button @click="sidebar=false" class="lg:hidden"><x-icon name="x" /></button></div>
             @if($role === 'mitra' && auth()->user()->partnerProfile)
-                <div class="mt-7 rounded-2xl border border-slate-200 bg-slate-50 p-3"><p class="text-xs font-medium text-slate-500">Panel Mitra</p><p class="mt-1 truncate text-sm font-extrabold text-ink">{{ auth()->user()->partnerProfile->business_name }}</p></div>
+                <div class="mt-7 rounded-2xl border border-slate-200 bg-slate-50 p-3"><p class="text-xs font-medium text-slate-500">Panel Mitra</p><x-partner-name :partner="auth()->user()->partnerProfile" class="mt-1 max-w-full text-sm font-extrabold text-ink" /></div>
             @endif
             <nav class="mt-7 min-h-0 flex-1 space-y-1.5 overflow-y-auto pr-1">
                 @foreach($menus[$role] as [$route,$icon,$label])
@@ -90,6 +90,7 @@ $menus = [
             </main>
         </div>
     </div>
+    <x-notifications />
     @stack('scripts')
 </body>
 </html>

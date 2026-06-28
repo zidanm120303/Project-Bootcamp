@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mitra;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Services\BookingAvailabilityService;
+use App\Support\Rupiah;
 use Illuminate\Validation\ValidationException;
 
 class BookingController extends Controller
@@ -32,6 +33,12 @@ class BookingController extends Controller
     public function update(Booking $booking, BookingAvailabilityService $availability)
     {
         $this->authorize('view', $booking);
+        if (request()->hasAny(['late_fee', 'damage_fee'])) {
+            request()->merge([
+                'late_fee' => Rupiah::value(request('late_fee')) ?? 0,
+                'damage_fee' => Rupiah::value(request('damage_fee')) ?? 0,
+            ]);
+        }
         $data = request()->validate([
             'status' => ['required', 'in:confirmed,ready_pickup,ongoing,returned,completed,cancelled'],
             'partner_notes' => ['nullable', 'string', 'max:1000'],
@@ -92,7 +99,7 @@ class BookingController extends Controller
                 $fees['payment_status'] = 'unpaid';
             }
         }
-        $booking->update($data + $timestamps + $fees);
+        $booking->update(array_merge($data, $timestamps, $fees));
         $booking->items()->update(['item_status' => match ($data['status']) {
             'ready_pickup' => 'prepared',
             'ongoing' => 'ongoing',

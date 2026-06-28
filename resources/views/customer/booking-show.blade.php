@@ -130,13 +130,19 @@
     <aside class="card p-6">
         <h2 class="font-extrabold text-ink">Ringkasan pembayaran</h2>
         <div class="mt-5 space-y-3 text-sm">
-            <div class="flex justify-between text-slate-500"><span>Subtotal</span><span>Rp{{ number_format($booking->subtotal_amount, 0, ',', '.') }}</span></div>
-            <div class="flex justify-between text-slate-500"><span>Deposit keamanan</span><span>Rp{{ number_format($booking->deposit_amount, 0, ',', '.') }}</span></div>
-            <div class="flex justify-between text-slate-500"><span>Biaya layanan</span><span>Rp{{ number_format($booking->platform_fee, 0, ',', '.') }}</span></div>
+            <div class="rounded-xl bg-slate-50 p-3">
+                <div class="flex justify-between gap-3 text-slate-700"><span class="font-semibold">Biaya sewa</span><span class="font-bold">Rp{{ number_format($booking->subtotal_amount, 0, ',', '.') }}</span></div>
+                <p class="mt-1 text-[11px] leading-5 text-slate-500">Rp{{ number_format($item->price_per_unit, 0, ',', '.') }} × {{ $item->rental_days }} hari × {{ $item->quantity }} unit</p>
+            </div>
+            <div class="rounded-xl bg-slate-50 p-3">
+                <div class="flex justify-between gap-3 text-slate-700"><span class="font-semibold">Deposit keamanan</span><span class="font-bold">Rp{{ number_format($booking->deposit_amount, 0, ',', '.') }}</span></div>
+                <p class="mt-1 text-[11px] leading-5 text-slate-500">Rp{{ number_format($item->product->security_deposit, 0, ',', '.') }} × {{ $item->quantity }} unit</p>
+            </div>
             @if((float)$booking->late_fee > 0)<div class="flex justify-between text-rose-600"><span>Biaya keterlambatan</span><span>Rp{{ number_format($booking->late_fee, 0, ',', '.') }}</span></div>@endif
             @if((float)$booking->damage_fee > 0)<div class="flex justify-between text-rose-600"><span>Biaya kerusakan</span><span>Rp{{ number_format($booking->damage_fee, 0, ',', '.') }}</span></div>@endif
             <div class="flex justify-between border-t border-slate-100 pt-4 text-lg font-black text-ink"><span>Total</span><span>Rp{{ number_format($booking->total_amount, 0, ',', '.') }}</span></div>
         </div>
+        <p class="mt-3 text-xs leading-5 text-emerald-600">Tanpa biaya layanan. Deposit dikembalikan sesuai hasil pemeriksaan barang.</p>
         <div class="mt-5 flex items-center justify-between rounded-xl bg-slate-50 p-3"><span class="text-xs font-semibold text-slate-500">Status bayar</span><x-status-badge :status="$booking->payment_status" /></div>
         @if((float)$booking->deposit_amount > 0)<div class="mt-3 flex items-center justify-between rounded-xl bg-indigo-50 p-3"><span class="text-xs font-semibold text-indigo-600">Status deposit</span><span class="text-xs font-bold text-indigo-700">{{ match($booking->deposit_status) {'pending' => 'Menunggu pembayaran', 'held' => 'Ditahan', 'pending_refund' => 'Menunggu pengembalian', 'refunded' => 'Sudah dikembalikan', default => 'Tidak berlaku'} }}</span></div>@endif
         @if(in_array($booking->status, ['pending', 'confirmed']) && in_array($booking->payment_status, ['unpaid', 'rejected']))

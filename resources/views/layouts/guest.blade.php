@@ -20,5 +20,6 @@
         </div>
     </section>
 </main>
+<x-notifications />
 </body>
 </html>

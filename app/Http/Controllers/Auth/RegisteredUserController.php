@@ -33,10 +33,12 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'phone' => ['required', 'string', 'max:30'],
+            'phone' => ['required', 'regex:/^[0-9+\-\s()]{8,20}$/'],
             'role' => ['required', 'in:customer,mitra'],
             'business_name' => ['required_if:role,mitra', 'nullable', 'string', 'max:180'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'phone.regex' => 'Format nomor telepon tidak valid.',
         ]);
 
         $user = User::create([

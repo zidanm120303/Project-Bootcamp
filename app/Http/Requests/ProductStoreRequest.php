@@ -2,10 +2,20 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Rupiah;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProductStoreRequest extends FormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'price' => Rupiah::value($this->input('price')),
+            'security_deposit' => Rupiah::value($this->input('security_deposit')),
+            'replacement_value' => Rupiah::value($this->input('replacement_value')),
+        ]);
+    }
+
     public function authorize(): bool
     {
         return $this->user()?->role === 'mitra';

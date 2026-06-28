@@ -71,6 +71,11 @@
                     <x-icon name="location" class="h-4 w-4 shrink-0 text-indigo-500" />
                     {{ $booking->partner->city }}
                 </p>
+                <p class="flex items-start gap-1.5">
+                    <x-icon name="calendar" class="mt-0.5 h-4 w-4 shrink-0 text-indigo-500" />
+                    <span>{{ $booking->partner->operational_hours ?: 'Konfirmasi jam operasional kepada mitra.' }}</span>
+                </p>
+                <p class="line-clamp-2 pl-5 text-[11px] leading-5 text-slate-400">{{ $booking->pickup_note ?: $booking->partner->pickup_note }}</p>
             </div>
 
             {{-- Total & tombol --}}

@@ -53,10 +53,39 @@
     </section>
     <aside class="card p-5">
         <div class="flex items-center justify-between">
-            <h2 class="font-extrabold text-ink">Kalender ketersediaan</h2><span class="rounded-lg bg-indigo-50 px-2 py-1 text-xs font-bold text-indigo-600">{{ now()->translatedFormat('F Y') }}</span>
+            <h2 class="font-extrabold text-ink">Kalender ketersediaan</h2><span class="rounded-lg bg-indigo-50 px-2 py-1 text-xs font-bold text-indigo-600">{{ $availabilityMonth }}</span>
         </div>
-        <div class="mt-5 grid grid-cols-7 gap-1 text-center text-xs">@foreach(['S','S','R','K','J','S','M'] as $d)<span class="py-2 font-bold text-slate-400">{{ $d }}</span>@endforeach @for($i=1;$i<=35;$i++)<span class="grid aspect-square place-items-center rounded-lg {{ $i === now()->day ? 'bg-indigo-600 font-bold text-white' : ($i%6===0 ? 'bg-rose-50 text-rose-500' : 'bg-emerald-50 text-emerald-700') }}">{{ (($i-1)%31)+1 }}</span>@endfor</div>
-        <div class="mt-5 flex justify-between text-[11px] text-slate-500"><span class="flex items-center gap-1"><i class="h-2 w-2 rounded-full bg-emerald-400"></i>Tersedia</span><span class="flex items-center gap-1"><i class="h-2 w-2 rounded-full bg-rose-400"></i>Dipesan</span><span class="flex items-center gap-1"><i class="h-2 w-2 rounded-full bg-indigo-500"></i>Hari ini</span></div>
+        <p class="mt-1 text-[11px] text-slate-400">Warna dihitung dari stok, jadwal produk, blackout, dan booking aktif.</p>
+        <div class="mt-4 grid grid-cols-7 gap-1 text-center text-xs">
+            @foreach(['S','S','R','K','J','S','M'] as $day)
+                <span class="py-2 font-bold text-slate-400">{{ $day }}</span>
+            @endforeach
+            @foreach($availabilityCalendar as $day)
+                <span title="{{ $day['available_units'] }} dari {{ $day['capacity'] }} unit tersedia"
+                    class="relative grid aspect-square place-items-center rounded-lg font-semibold
+                        {{ $day['is_today']
+                            ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
+                            : ($day['status'] === 'available'
+                                ? 'bg-emerald-50 text-emerald-700'
+                                : ($day['status'] === 'limited'
+                                    ? 'bg-amber-50 text-amber-700'
+                                    : ($day['status'] === 'unavailable'
+                                        ? 'bg-rose-50 text-rose-500'
+                                        : 'bg-slate-50 text-slate-300'))) }}
+                        {{ $day['is_current_month'] ? '' : 'opacity-40' }}">
+                    {{ $day['date_label'] }}
+                    @if(!$day['is_today'] && in_array($day['status'], ['limited', 'unavailable'], true))
+                        <i class="absolute bottom-1 h-1 w-1 rounded-full {{ $day['status'] === 'limited' ? 'bg-amber-400' : 'bg-rose-400' }}"></i>
+                    @endif
+                </span>
+            @endforeach
+        </div>
+        <div class="mt-5 flex flex-wrap justify-between gap-2 text-[10px] text-slate-500">
+            <span class="flex items-center gap-1"><i class="h-2 w-2 rounded-full bg-emerald-400"></i>Tersedia</span>
+            <span class="flex items-center gap-1"><i class="h-2 w-2 rounded-full bg-amber-400"></i>Terbatas</span>
+            <span class="flex items-center gap-1"><i class="h-2 w-2 rounded-full bg-rose-400"></i>Penuh/tutup</span>
+            <span class="flex items-center gap-1"><i class="h-2 w-2 rounded-full bg-indigo-500"></i>Hari ini</span>
+        </div>
     </aside>
 </div>
 <div class="mt-6 grid gap-6 lg:grid-cols-2 xl:grid-cols-3">

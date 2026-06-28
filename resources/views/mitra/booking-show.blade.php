@@ -134,8 +134,8 @@
                     <input type="hidden" name="status" value="returned">
                     <textarea name="return_condition" class="input text-sm" rows="4" placeholder="Catat kondisi kamera, lensa, baterai, dan aksesori saat kembali..." required></textarea>
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="number" min="0" name="late_fee" class="input px-3 text-sm" placeholder="Biaya terlambat">
-                        <input type="number" min="0" name="damage_fee" class="input px-3 text-sm" placeholder="Biaya kerusakan">
+                        <div><label class="mb-1 block text-xs font-semibold text-slate-500">Biaya terlambat</label><input type="text" inputmode="numeric" name="late_fee" class="input px-3 text-sm" data-rupiah placeholder="Rp 0"></div>
+                        <div><label class="mb-1 block text-xs font-semibold text-slate-500">Biaya kerusakan</label><input type="text" inputmode="numeric" name="damage_fee" class="input px-3 text-sm" data-rupiah placeholder="Rp 0"></div>
                     </div>
                     <button class="btn-primary w-full">Konfirmasi dikembalikan</button>
                 </form>

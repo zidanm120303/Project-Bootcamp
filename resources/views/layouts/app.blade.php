@@ -10,5 +10,6 @@
     <header class="border-b border-slate-200 bg-white"><div class="container-app flex h-[72px] items-center justify-between"><a href="{{ route('home') }}"><x-application-logo /></a><div class="flex items-center gap-3"><a href="{{ route((auth()->user()->role ?: 'customer').'.dashboard') }}" class="btn-secondary py-2">dashboard</a></div></div></header>
     @if(isset($header))<div class="border-b border-slate-200 bg-white"><div class="container-app py-6">{{ $header }}</div></div>@endif
     <main>{{ $slot }}</main>
+    <x-notifications />
 </body>
 </html>

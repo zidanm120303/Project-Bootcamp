@@ -106,7 +106,11 @@ class CameraRentalWorkflowTest extends TestCase
         $this->get(route('products.show', $product))
             ->assertOk()
             ->assertSee('Full Frame CMOS')
-            ->assertSee('Body, lensa, baterai, charger, tas.');
+            ->assertSee('Body, lensa, baterai, charger, tas.')
+            ->assertSee('Mitra Terverifikasi')
+            ->assertSee('Kalender Ketersediaan')
+            ->assertSee('Ringkasan Harga')
+            ->assertSee('Alur pemesanan RentalPro');
         $this->actingAs($admin)->get(route('admin.products.show', $product))
             ->assertOk()
             ->assertSee('SONY-TEST-001');
@@ -129,7 +133,8 @@ class CameraRentalWorkflowTest extends TestCase
         $booking = $customer->bookings()->firstOrFail();
         $this->assertSame('pending', $booking->status);
         $this->assertSame('50000.00', $booking->deposit_amount);
-        $this->assertSame('260000.00', $booking->total_amount);
+        $this->assertSame('0.00', $booking->platform_fee);
+        $this->assertSame('250000.00', $booking->total_amount);
 
         $this->actingAs($owner)
             ->patch(route('mitra.bookings.update', $booking), ['status' => 'confirmed'])
@@ -285,6 +290,25 @@ class CameraRentalWorkflowTest extends TestCase
             ->assertOk()
             ->assertSee('RentalPro')
             ->assertSee('Sony A7 IV Full Frame Creator Kit');
+        $this->get(route('catalog', [
+            'min_price' => 'Rp 200.000',
+            'max_price' => 'Rp 400.000',
+            'sort' => 'price_low',
+        ]))
+            ->assertOk()
+            ->assertSeeInOrder([
+                'Rode Wireless PRO Dual Mic Kit',
+                'Aputure LS 300D II Lighting Kit',
+                'DJI RS 3 Pro Combo',
+                'Canon RF 70-200mm F2.8L IS USM',
+                'Fujifilm X-T5 Street Photography Kit',
+            ])
+            ->assertDontSee('GoPro HERO12 Black Adventure Kit')
+            ->assertDontSee('Sony A7 IV Full Frame Creator Kit');
+        $this->get(route('catalog', ['q' => 'Lensaku']))
+            ->assertOk()
+            ->assertSee('Canon EOS R6 Mark II Wedding Kit')
+            ->assertDontSee('Aputure LS 300D II Lighting Kit');
         $this->actingAs($customer)->get(route('profile.edit'))
             ->assertOk()
             ->assertSee('Dokumen identitas')
@@ -295,6 +319,10 @@ class CameraRentalWorkflowTest extends TestCase
         $this->actingAs($owner)->get(route('mitra.products.index'))
             ->assertOk()
             ->assertSee('Kamera & Unit');
+        $this->actingAs($owner)->get(route('mitra.dashboard'))
+            ->assertOk()
+            ->assertSee('Warna dihitung dari stok, jadwal produk, blackout, dan booking aktif.')
+            ->assertSee('Mitra Terverifikasi');
         $this->actingAs($admin)->get(route('admin.partners.index'))
             ->assertOk()
             ->assertSee('Kelengkapan dokumen wajib');

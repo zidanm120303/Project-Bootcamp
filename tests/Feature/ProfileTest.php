@@ -37,13 +37,40 @@ class ProfileTest extends TestCase
 
         $response
             ->assertSessionHasNoErrors()
+            ->assertSessionHas('status', 'profile-updated')
             ->assertRedirect('/profile');
+
+        $this->actingAs($user)
+            ->get('/profile')
+            ->assertOk()
+            ->assertSee('Profil akun berhasil diperbarui.');
 
         $user->refresh();
 
         $this->assertSame('Test User', $user->name);
         $this->assertSame('test@example.com', $user->email);
         $this->assertNull($user->email_verified_at);
+    }
+
+    public function test_invalid_profile_format_is_returned_to_global_notification_layer(): void
+    {
+        $user = User::factory()->create(['role' => 'admin', 'phone' => '081234567890']);
+
+        $this->actingAs($user)
+            ->from('/profile')
+            ->patch('/profile', [
+                'name' => 'Test User',
+                'email' => 'format-email-salah',
+                'phone' => '123',
+            ])
+            ->assertRedirect('/profile')
+            ->assertSessionHasErrors(['email', 'phone']);
+
+        $this->actingAs($user)
+            ->get('/profile')
+            ->assertOk()
+            ->assertSee('window.serverValidationErrors', false)
+            ->assertSee('Periksa kembali data');
     }
 
     public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void

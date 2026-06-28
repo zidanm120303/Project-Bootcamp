@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function show(Product $product)
+    public function show(Product $product, BookingAvailabilityService $availability)
     {
         abort_unless($product->status === 'active' && $product->partner->verification_status === 'verified', 404);
         $product->load(['partner', 'category', 'images', 'reviews.customer']);
@@ -18,6 +18,7 @@ class ProductController extends Controller
             'product' => $product,
             'similar' => Product::active()->where('category_id', $product->category_id)->whereKeyNot($product->id)
                 ->with(['partner', 'primaryImage'])->limit(4)->get(),
+            'availabilityCalendar' => $availability->calendar($product, today(), 14),
         ]);
     }
 
@@ -29,7 +30,18 @@ class ProductController extends Controller
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        return response()->json($availability->check($product, $data['start_at'], $data['end_at'], $data['quantity']));
+        $result = $availability->check($product, $data['start_at'], $data['end_at'], $data['quantity']);
+        $calendarStart = \Carbon\Carbon::parse($data['start_at'])->subDays(2)->max(today());
+
+        return response()->json($result + [
+            'suggestions' => $availability->suggestions(
+                $product,
+                $data['start_at'],
+                $data['end_at'],
+                $data['quantity']
+            ),
+            'calendar' => $availability->calendar($product, $calendarStart, 14, $data['quantity']),
+        ]);
     }
 
     public function checkout(

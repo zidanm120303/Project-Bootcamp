@@ -19,12 +19,15 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         foreach ([
-            'platform_fee_percent' => 5,
+            'platform_fee_percent' => 0,
             'trusted_min_score' => 85,
             'payment_due_hours' => 24,
             'booking_auto_cancel_hours' => 24,
         ] as $key => $value) {
-            SystemSetting::create(['key' => $key, 'value' => (string) $value, 'type' => 'number']);
+            SystemSetting::updateOrCreate(
+                ['key' => $key],
+                ['value' => (string) $value, 'type' => 'number']
+            );
         }
 
         $admin = $this->user('Admin RentalPro', 'admin@rentra.test', '081100000001', 'admin');
@@ -368,9 +371,9 @@ class DatabaseSeeder extends Seeder
         $end = $start->copy()->addDays($days);
         $subtotal = (float) $product->price * $days * $quantity;
         $deposit = (float) $product->security_deposit * $quantity;
-        $fee = round($subtotal * .05);
+        $fee = 0;
         $extra = $status === 'returned' && $sequence === 7 ? 175000 : 0;
-        $total = $subtotal + $deposit + $fee + $extra;
+        $total = $subtotal + $deposit + $extra;
         $paid = in_array($status, ['ready_pickup', 'ongoing', 'returned', 'completed']);
         $paymentStatus = $paid ? 'paid' : 'unpaid';
         if ($status === 'confirmed' && $sequence === 3) {
@@ -443,7 +446,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         if ($paid || in_array($paymentStatus, ['waiting_confirmation', 'rejected'])) {
-            $paymentAmount = $subtotal + $deposit + $fee;
+            $paymentAmount = $subtotal + $deposit;
             $paymentCode = 'PAY-'.$createdAt->format('ymd').'-'.str_pad((string) $sequence, 4, '0', STR_PAD_LEFT);
             $proofPath = "payment-proofs/demo-{$sequence}.pdf";
             Storage::put($proofPath, "%PDF-1.4 Bukti transfer demo {$paymentCode}");

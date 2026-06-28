@@ -50,14 +50,14 @@
         <div class="overflow-hidden rounded-xl border border-slate-200">
             <table class="w-full text-left text-sm">
                 <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500"><tr><th class="p-4">Barang</th><th class="p-4">Jadwal</th><th class="p-4 text-center">Unit</th><th class="p-4 text-right">Subtotal</th></tr></thead>
-                <tbody><tr class="border-t border-slate-200"><td class="p-4"><p class="font-bold text-ink">{{ $item->product->name }}</p><p class="text-xs text-slate-400">Rp{{ number_format($item->price_per_unit, 0, ',', '.') }} / hari × {{ $item->rental_days }} hari</p></td><td class="p-4">{{ $booking->start_at->translatedFormat('d M Y') }}<br><span class="text-slate-400">s.d. {{ $booking->end_at->translatedFormat('d M Y') }}</span></td><td class="p-4 text-center font-bold">{{ $item->quantity }}</td><td class="p-4 text-right font-bold text-ink">Rp{{ number_format($item->subtotal, 0, ',', '.') }}</td></tr></tbody>
+                <tbody><tr class="border-t border-slate-200"><td class="p-4"><p class="font-bold text-ink">{{ $item->product->name }}</p><p class="text-xs text-slate-400">Rp{{ number_format($item->price_per_unit, 0, ',', '.') }} × {{ $item->rental_days }} hari × {{ $item->quantity }} unit</p></td><td class="p-4">{{ $booking->start_at->translatedFormat('d M Y') }}<br><span class="text-slate-400">s.d. {{ $booking->end_at->translatedFormat('d M Y') }}</span></td><td class="p-4 text-center font-bold">{{ $item->quantity }}</td><td class="p-4 text-right font-bold text-ink">Rp{{ number_format($item->subtotal, 0, ',', '.') }}</td></tr></tbody>
             </table>
         </div>
         <div class="ml-auto mt-6 max-w-sm space-y-3 text-sm">
             <div class="flex justify-between text-slate-500"><span>Subtotal</span><span>Rp{{ number_format($booking->subtotal_amount, 0, ',', '.') }}</span></div>
             <div class="flex justify-between text-slate-500"><span>Deposit keamanan</span><span>Rp{{ number_format($booking->deposit_amount, 0, ',', '.') }}</span></div>
-            <div class="flex justify-between text-slate-500"><span>Biaya layanan</span><span>Rp{{ number_format($booking->platform_fee, 0, ',', '.') }}</span></div>
             <div class="flex justify-between border-t border-slate-200 pt-4 text-lg font-black text-ink"><span>Total</span><span>Rp{{ number_format($booking->total_amount, 0, ',', '.') }}</span></div>
+            <p class="text-right text-xs text-emerald-600">Tanpa biaya layanan</p>
         </div>
     </section>
 

@@ -72,7 +72,7 @@ npm run build
 
 Nilai operasional disimpan pada tabel `system_settings` dan diisi melalui seeder, bukan melalui menu dashboard:
 
-- `platform_fee_percent`: persentase biaya layanan saat checkout.
+- Tidak ada biaya layanan untuk customer; total awal hanya terdiri dari biaya sewa dan deposit keamanan.
 - `trusted_min_score`: ambang skor untuk label Mitra Terpercaya.
 - `payment_due_hours`: acuan batas pembayaran untuk proses otomatis.
 - `booking_auto_cancel_hours`: acuan pembatalan booking kedaluwarsa.

@@ -88,13 +88,68 @@ class BookingAvailabilityTest extends TestCase
         }
     }
 
+    public function test_calendar_and_suggestions_follow_real_remaining_stock(): void
+    {
+        $this->blockingBooking(2);
+        $availability = app(BookingAvailabilityService::class);
+        $calendar = $availability->calendar($this->product, '2026-07-10', 4, 2);
+
+        $this->assertSame('unavailable', $calendar[0]['status']);
+        $this->assertSame(1, $calendar[0]['available_units']);
+        $this->assertSame('unavailable', $calendar[1]['status']);
+        $this->assertSame('available', $calendar[2]['status']);
+        $this->assertSame(3, $calendar[2]['available_units']);
+
+        $suggestions = $availability->suggestions(
+            $this->product,
+            '2026-07-11',
+            '2026-07-13',
+            2
+        );
+
+        $this->assertNotEmpty($suggestions);
+        $this->assertSame('2026-07-12', $suggestions[0]['start_at']);
+        $this->assertSame('2026-07-14', $suggestions[0]['end_at']);
+
+        $this->postJson(route('products.availability', $this->product), [
+            'start_at' => '2026-07-11',
+            'end_at' => '2026-07-13',
+            'quantity' => 2,
+        ])
+            ->assertOk()
+            ->assertJsonPath('available', false)
+            ->assertJsonPath('available_units', 1)
+            ->assertJsonPath('suggestions.0.start_at', '2026-07-12');
+    }
+
+    public function test_daily_capacity_rule_changes_calendar_fill_and_availability(): void
+    {
+        $this->product->availabilities()->create([
+            'day_of_week' => 6,
+            'start_time' => '08:00',
+            'end_time' => '17:00',
+            'capacity' => 1,
+            'is_available' => true,
+        ]);
+
+        $availability = app(BookingAvailabilityService::class);
+
+        $this->assertFalse(
+            $availability->check($this->product, '2026-07-11', '2026-07-12', 2)['available']
+        );
+        $this->assertSame(
+            'limited',
+            $availability->calendar($this->product, '2026-07-11', 1, 1)[0]['status']
+        );
+    }
+
     private function blockingBooking(int $quantity): Booking
     {
         $booking = Booking::create([
             'booking_code' => 'TEST-'.uniqid(), 'customer_id' => $this->customer->id,
             'partner_id' => $this->product->partner_id, 'booking_type' => 'rental',
             'start_at' => '2026-07-10', 'end_at' => '2026-07-12', 'subtotal_amount' => 200000,
-            'platform_fee' => 10000, 'total_amount' => 210000, 'status' => 'confirmed',
+            'platform_fee' => 0, 'total_amount' => 200000, 'status' => 'confirmed',
         ]);
         $booking->items()->create([
             'product_id' => $this->product->id, 'quantity' => $quantity, 'price_per_unit' => 100000,

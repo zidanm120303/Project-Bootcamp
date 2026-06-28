@@ -21,15 +21,14 @@ class BookingPriceService
         };
 
         $subtotal = (float) $product->price * $rentalDays * $quantity;
-        $fee = round($subtotal * ((float) \App\Models\SystemSetting::valueFor('platform_fee_percent', 5) / 100));
         $deposit = (float) $product->security_deposit * $quantity;
 
         return [
             'rental_days' => $rentalDays,
             'subtotal' => $subtotal,
             'deposit' => $deposit,
-            'platform_fee' => $fee,
-            'total' => $subtotal + $fee + $deposit,
+            'platform_fee' => 0,
+            'total' => $subtotal + $deposit,
         ];
     }
 }

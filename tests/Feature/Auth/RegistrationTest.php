@@ -30,4 +30,18 @@ class RegistrationTest extends TestCase
         $this->assertAuthenticated();
         $response->assertRedirect(route('customer.dashboard'));
     }
+
+    public function test_registration_rejects_invalid_phone_format(): void
+    {
+        $this->post('/register', [
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'phone' => 'abc',
+            'role' => 'customer',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ])->assertSessionHasErrors('phone');
+
+        $this->assertGuest();
+    }
 }

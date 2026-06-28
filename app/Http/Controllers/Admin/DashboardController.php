@@ -25,7 +25,7 @@ class DashboardController extends Controller
             'partners' => PartnerProfile::where('verification_status', 'pending')->with(['user', 'documents'])->latest()->limit(5)->get(),
             'products' => Product::where('status', 'pending_review')->with(['partner', 'category', 'primaryImage'])->latest()->limit(5)->get(),
             'bookings' => Booking::with(['customer', 'partner', 'items.product'])->latest()->limit(6)->get(),
-            'revenue' => Booking::where('payment_status', 'paid')->sum('platform_fee'),
+            'revenue' => Booking::where('payment_status', 'paid')->sum('subtotal_amount'),
         ]);
     }
 }
