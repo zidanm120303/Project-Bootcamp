@@ -2,15 +2,14 @@
 
 namespace App\Services;
 
+use App\Models\Booking;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 
 class BookingAvailabilityService
 {
-    private const BLOCKING_STATUSES = ['confirmed', 'waiting_payment', 'paid', 'prepared', 'ongoing'];
-
-    public function check(Product $product, string|Carbon $start, string|Carbon $end, int $qty = 1, ?int $ignoreBookingId = null): array
+    public function check(Product $product, string|Carbon $start, string|Carbon $end, int $quantity = 1, ?int $ignoreBookingId = null): array
     {
         $startAt = $start instanceof Carbon ? $start->copy() : Carbon::parse($start);
         $endAt = $end instanceof Carbon ? $end->copy() : Carbon::parse($end);
@@ -20,11 +19,11 @@ class BookingAvailabilityService
         }
 
         if ($product->status !== 'active') {
-            return $this->result(false, 0, 'Produk sedang tidak aktif.');
+            return $this->result(false, 'Barang sedang tidak tersedia untuk disewa.');
         }
 
         if ($product->partner->verification_status !== 'verified') {
-            return $this->result(false, 0, 'Mitra belum terverifikasi.');
+            return $this->result(false, 'Barang sedang tidak tersedia untuk disewa.');
         }
 
         $isBlackout = $product->blackoutDates()
@@ -33,29 +32,29 @@ class BookingAvailabilityService
             ->exists();
 
         if ($isBlackout) {
-            return $this->result(false, 0, 'Produk tidak tersedia pada sebagian tanggal tersebut.');
+            return $this->result(false, 'Jumlah unit yang dipilih tidak tersedia pada jadwal tersebut. Silakan kurangi jumlah unit atau pilih tanggal lain.');
         }
 
         $used = $product->bookingItems()
             ->whereHas('booking', function ($query) use ($ignoreBookingId) {
-                $query->whereIn('status', self::BLOCKING_STATUSES);
+                $query->whereIn('status', Booking::ACTIVE_RENTAL_STATUSES);
                 if ($ignoreBookingId) {
                     $query->whereKeyNot($ignoreBookingId);
                 }
             })
             ->where('start_at', '<', $endAt)
             ->where('end_at', '>', $startAt)
-            ->sum('qty');
+            ->sum('quantity');
 
         $available = max(0, $product->stock_total - $used);
 
-        return $available >= $qty
-            ? $this->result(true, $available, "Tersedia {$available} unit pada tanggal yang dipilih.")
-            : $this->result(false, $available, "");
+        return $available >= $quantity
+            ? $this->result(true, 'Barang tersedia untuk tanggal yang dipilih.')
+            : $this->result(false, 'Jumlah unit yang dipilih tidak tersedia pada jadwal tersebut. Silakan kurangi jumlah unit atau pilih tanggal lain.');
     }
 
-    private function result(bool $available, int $stock, string $message): array
+    private function result(bool $available, string $message): array
     {
-        return ['available' => $available, 'stock' => $stock, 'message' => $message];
+        return ['available' => $available, 'message' => $message];
     }
 }

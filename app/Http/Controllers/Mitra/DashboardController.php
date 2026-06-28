@@ -20,7 +20,7 @@ class DashboardController extends Controller
             'stats' => [
                 'products' => Product::where('partner_id', $partner->id)->where('status', 'active')->count(),
                 'today' => (clone $bookings)->whereDate('created_at', today())->count(),
-                'revenue' => (clone $bookings)->whereIn('status', ['paid', 'prepared', 'ongoing', 'completed'])->sum('subtotal_amount'),
+                'revenue' => (clone $bookings)->where('payment_status', 'paid')->sum('subtotal_amount'),
                 'pending' => (clone $bookings)->where('status', 'pending')->count(),
             ],
         ]);

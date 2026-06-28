@@ -1,16 +1,16 @@
-# Rentra UMKM
+# RentalPro
 
-Marketplace katalog rental barang dan jasa UMKM berbasis Laravel 10. Implementasi mengikuti blueprint pada `Project Stub/rentra_umkm_katalog` dan tema visual pada folder `mockups ui-ux`.
+Marketplace rental kamera dan perlengkapan produksi berbasis Laravel 10.
 
 ## Fitur yang tersedia
 
 - Autentikasi Laravel Breeze dengan akun Customer dan Mitra.
 - Role Admin, Mitra, dan Customer dengan middleware serta policy kepemilikan data.
-- Landing page, katalog, pencarian/filter, detail produk, dan cek ketersediaan.
+- Landing page, katalog kamera, pencarian/filter, spesifikasi teknis, unit fisik, dan cek ketersediaan.
 - Booking dengan validasi stok berdasarkan periode, blackout date, database transaction, dan `lockForUpdate`.
-- Dashboard Customer: riwayat, detail/timeline pesanan, pembayaran, ulasan, dan komplain.
+- Dashboard Customer: profil dan identitas privat, riwayat, detail/timeline pesanan, pembayaran, ulasan, dan komplain.
 - Dashboard Mitra: profil/dokumen, CRUD produk, booking masuk, dan progres rental.
-- Dashboard Admin: user, kategori, verifikasi mitra, moderasi produk, booking, pembayaran, komplain, dan pengaturan.
+- Dashboard Admin: user, kategori, verifikasi dokumen mitra, moderasi kamera, booking, pembayaran, dan komplain.
 - Seeder data demo, status badge, empty state, flash message, serta layout responsive.
 
 ## Kebutuhan
@@ -67,6 +67,17 @@ php artisan test
 vendor/bin/pint --test
 npm run build
 ```
+
+## Konfigurasi sistem internal
+
+Nilai operasional disimpan pada tabel `system_settings` dan diisi melalui seeder, bukan melalui menu dashboard:
+
+- `platform_fee_percent`: persentase biaya layanan saat checkout.
+- `trusted_min_score`: ambang skor untuk label Mitra Terpercaya.
+- `payment_due_hours`: acuan batas pembayaran untuk proses otomatis.
+- `booking_auto_cancel_hours`: acuan pembatalan booking kedaluwarsa.
+
+Pengaturan ini sengaja tidak dapat diubah dari UI admin agar perubahan biaya dan kebijakan harus melalui review kode/deployment. Dua nilai waktu baru menjadi konfigurasi acuan dan memerlukan scheduler jika otomatisasi kedaluwarsa akan diaktifkan.
 
 ## Catatan keamanan versi framework
 

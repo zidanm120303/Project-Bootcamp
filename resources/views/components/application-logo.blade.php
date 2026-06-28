@@ -6,5 +6,5 @@
             <path d="m5 11.6 7 4.1 7-4.1v5.2L12 21l-7-4.2v-5.2Z" fill="currentColor" opacity=".72" />
         </svg>
     </span>
-    <span class="text-xl font-black tracking-tight text-ink">Rental<span class="text-indigo-600">pro</span></span>
+    <span class="text-xl font-black tracking-tight text-ink">Rental<span class="text-indigo-600">Pro</span></span>
 </span>

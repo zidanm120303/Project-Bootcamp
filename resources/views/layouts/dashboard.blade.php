@@ -3,18 +3,17 @@ $role = auth()->user()->role;
 $menus = [
     'customer' => [
         ['customer.dashboard','home','Ringkasan'], ['customer.bookings.index','calendar','Pesanan Saya'],
-        ['catalog','search','Cari Produk'], ['profile.edit','settings','Profil'],
+        ['catalog','search','Cari Kamera'], ['profile.edit','settings','Profil'],
     ],
     'mitra' => [
-        ['mitra.dashboard','home','Dashboard'], ['mitra.products.index','box','Produk & Jasa'],
+        ['mitra.dashboard','home','Dashboard'], ['mitra.products.index','box','Kamera & Unit'],
         ['mitra.bookings.index','calendar','Booking Masuk'], ['mitra.profile.edit','store','Profil & Dokumen'],
     ],
     'admin' => [
         ['admin.dashboard','home','Dashboard'], ['admin.partners.index','shield','Verifikasi Mitra'],
-        ['admin.products.index','box','Produk & Katalog'], ['admin.bookings.index','calendar','Booking'],
+        ['admin.products.index','box','Kamera & Katalog'], ['admin.bookings.index','calendar','Booking'],
         ['admin.payments.index','card','Pembayaran'], ['admin.disputes.index','alert','Komplain'],
         ['admin.categories.index','grid','Kategori'], ['admin.users.index','users','Pengguna'],
-        ['admin.settings.index','settings','Pengaturan'],
     ],
 ];
 @endphp
@@ -22,7 +21,7 @@ $menus = [
 <html lang="id">
 <head>
     <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Dashboard') — Rentalpro</title>
+    <title>@yield('title', 'Dashboard') — RentalPro</title>
     <link rel="preconnect" href="https://fonts.bunny.net"><link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800,900&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -76,11 +75,19 @@ $menus = [
         </aside>
         <div x-show="sidebar" x-cloak @click="sidebar=false" class="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm lg:hidden"></div>
         <div class="min-w-0 lg:ml-[270px]">
-            <header class="sticky top-0 z-30 flex h-[76px] items-center justify-between border-b border-slate-200 bg-white/90 px-4 backdrop-blur-xl sm:px-7">
-                <div class="flex items-center gap-3"><button @click="sidebar=true" class="rounded-xl border border-slate-200 p-2 lg:hidden"><x-icon name="menu" /></button><div><h1 class="text-lg font-extrabold text-ink">@yield('page-title','Dashboard')</h1><p class="hidden text-xs text-slate-500 sm:block">@yield('page-subtitle','Kelola aktivitas Anda dalam satu tempat.')</p></div></div>
-                <div class="flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-full bg-indigo-100 font-extrabold text-indigo-700">{{ str(auth()->user()->name)->substr(0,1) }}</span><div class="hidden sm:block"><p class="text-sm font-bold text-ink">{{ auth()->user()->name }}</p><p class="text-xs capitalize text-slate-500">{{ $role }}</p></div></div>
-            </header>
-            <main class="p-4 sm:p-7"><x-flash />@yield('content')</main>
+            <main class="p-4 sm:p-7">
+                <div class="mb-7 flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-3">
+                        <button @click="sidebar=true" class="mt-0.5 rounded-xl border border-slate-200 bg-white p-2 shadow-sm lg:hidden"><x-icon name="menu" /></button>
+                        <div><p class="text-[11px] font-extrabold uppercase tracking-[.18em] text-indigo-500">{{ match($role) {'admin' => 'Panel Admin', 'mitra' => 'Panel Mitra', default => 'Akun Customer'} }}</p><h1 class="mt-1 text-2xl font-black tracking-tight text-ink">@yield('page-title','Dashboard')</h1><p class="mt-1 text-sm text-slate-500">@yield('page-subtitle','Kelola aktivitas Anda dalam satu tempat.')</p></div>
+                    </div>
+                    <a href="{{ route('profile.edit') }}" class="flex shrink-0 items-center gap-3 rounded-2xl border border-slate-200 bg-white p-2 pr-3 shadow-sm transition hover:border-indigo-200 hover:shadow-md">
+                        @if(auth()->user()->avatar_url)<img src="{{ auth()->user()->avatar_url }}" class="h-10 w-10 rounded-xl object-cover" alt="">@else<span class="grid h-10 w-10 place-items-center rounded-xl bg-indigo-100 font-extrabold text-indigo-700">{{ str(auth()->user()->name)->substr(0,1) }}</span>@endif
+                        <span class="hidden text-left sm:block"><span class="block text-sm font-bold text-ink">{{ auth()->user()->name }}</span><span class="block text-xs capitalize text-slate-400">{{ $role }}</span></span>
+                    </a>
+                </div>
+                <x-flash />@yield('content')
+            </main>
         </div>
     </div>
     @stack('scripts')

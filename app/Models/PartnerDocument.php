@@ -7,11 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class PartnerDocument extends Model
 {
     protected $fillable = [
-        'partner_id', 'document_type', 'document_number', 'file_path', 'status',
+        'partner_id', 'document_type', 'document_name', 'document_number', 'issued_at',
+        'expires_at', 'is_required', 'file_path', 'status',
         'admin_notes', 'reviewed_by', 'reviewed_at',
     ];
 
-    protected $casts = ['reviewed_at' => 'datetime'];
+    protected $casts = [
+        'issued_at' => 'date',
+        'expires_at' => 'date',
+        'is_required' => 'boolean',
+        'reviewed_at' => 'datetime',
+    ];
 
     public function partner()
     {

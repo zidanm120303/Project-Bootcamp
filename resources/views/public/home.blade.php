@@ -1,5 +1,5 @@
 @extends('layouts.public')
-@section('title', 'Rentalpro — Sewa Mudah, Jadwal Aman')
+@section('title', 'RentalPro — Sewa Mudah, Jadwal Aman')
 @section('content')
     <section class="relative overflow-hidden bg-gradient-to-b from-indigo-50/70 via-white to-white py-12 lg:py-16">
         <div class="pointer-events-none absolute -left-24 top-20 h-72 w-72 rounded-full bg-sky-200/30 blur-3xl"></div>
@@ -8,19 +8,18 @@
             <div>
                 <span
                     class="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-white px-4 py-2 text-xs font-bold text-indigo-700 shadow-sm"><x-icon
-                        name="shield" class="h-4 w-4" />Marketplace rental UMKM terpercaya</span>
+                        name="shield" class="h-4 w-4" />Marketplace rental kamera terpercaya</span>
                 <h1 class="mt-6 text-4xl font-black leading-[1.1] tracking-[-0.04em] text-ink sm:text-5xl xl:text-[58px]">
-                    Sewa mudah, jadwal aman, <span
-                        class="bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">bisnis makin
-                        berkembang.</span></h1>
-                <p class="mt-5 max-w-2xl text-base leading-7 text-slate-500 sm:text-lg">Temukan barang dan jasa berkualitas
-                    dari mitra UMKM terverifikasi. Jadwal bebas bentrok, stok akurat, dan transaksi terasa ringan.</p>
+                    Kamera siap produksi, jadwal tetap aman, <span
+                        class="bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">karya makin
+                        maksimal.</span></h1>
+                <p class="mt-5 max-w-2xl text-base leading-7 text-slate-500 sm:text-lg">Sewa kamera, lensa, lighting, audio, drone, dan stabilizer dari toko terverifikasi. Setiap unit tercatat, jadwal divalidasi, dan pembayaran ditinjau dengan transparan.</p>
                 <form action="{{ route('catalog') }}"
                     class="mt-8 grid gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl shadow-indigo-100/50 sm:grid-cols-[1fr_190px_auto]">
                     <label class="flex items-center gap-3 px-3"><x-icon name="search"
                             class="h-5 w-5 text-indigo-500" /><span class="sr-only">Cari produk</span><input name="q"
                             class="w-full border-0 px-0 py-3 text-sm focus:ring-0"
-                            placeholder="Cari kamera, tenda, catering..." /></label>
+                            placeholder="Cari Sony A7 IV, lensa, lighting..." /></label>
                     <select name="city"
                         class="rounded-xl border-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500">
                         <option value="">Semua lokasi</option>
@@ -47,10 +46,10 @@
                 <div class="absolute -inset-8 rounded-full bg-indigo-200/40 blur-2xl"></div>
                 <div
                     class="relative overflow-hidden rounded-[32px] border-[10px] border-white bg-slate-100 shadow-2xl shadow-indigo-200">
-                    <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=90"
-                        alt="Perlengkapan acara UMKM" class="aspect-[4/3] w-full object-cover">
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=90"
+                        alt="Kamera profesional untuk disewa" class="aspect-[4/3] w-full object-cover">
                     <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 to-transparent p-6 pt-20">
-                        <p class="text-lg font-extrabold text-white">Semua kebutuhan acara, satu tempat.</p>
+                        <p class="text-lg font-extrabold text-white">Peralatan produksi dalam satu tempat.</p>
                         <p class="mt-1 text-sm text-white/70">Terawat • Terjadwal • Terlindungi</p>
                     </div>
                 </div>
@@ -72,7 +71,7 @@
         <div class="flex flex-wrap items-end justify-between gap-4">
             <div>
                 <p class="section-kicker">Kategori populer</p>
-                <h2 class="section-title">Ada untuk setiap kebutuhan</h2>
+                <h2 class="section-title">Peralatan untuk setiap produksi</h2>
             </div><a href="{{ route('catalog') }}" class="text-sm font-bold text-indigo-600 hover:text-indigo-800">Lihat
                 semua katalog →</a>
         </div>
@@ -109,10 +108,10 @@
     <section id="cara-kerja" class="container-app py-20">
         <div class="text-center">
             <p class="section-kicker">Mudah dan transparan</p>
-            <h2 class="section-title">Empat langkah menuju acara yang lancar</h2>
+            <h2 class="section-title">Empat langkah menuju produksi yang lancar</h2>
         </div>
         <div class="mt-10 grid gap-5 md:grid-cols-4">
-            @foreach ([['search', 'Temukan kebutuhan', 'Cari dan filter berdasarkan lokasi, kategori, serta anggaran.'], ['calendar', 'Pilih jadwal', 'Cek stok dan slot tersedia secara otomatis.'], ['card', 'Konfirmasi pesanan', 'Mitra mengonfirmasi, lalu unggah bukti pembayaran.'], ['shield', 'Selesai dengan tenang', 'Pantau progres hingga pesanan tuntas dan beri ulasan.']] as $i => [$icon, $title, $desc])
+            @foreach ([['search', 'Pilih peralatan', 'Bandingkan spesifikasi, kondisi, kelengkapan, lokasi, dan harga sewa.'], ['calendar', 'Tentukan jadwal', 'Sistem memeriksa ketersediaan setiap unit pada tanggal pilihan.'], ['card', 'Bayar dan verifikasi', 'Mitra mengonfirmasi pesanan, lalu admin memeriksa bukti transfer.'], ['shield', 'Ambil dan kembalikan', 'Tunjukkan kode booking, periksa unit, dan pantau transaksi sampai selesai.']] as $i => [$icon, $title, $desc])
                 <div class="card relative p-6"><span
                         class="absolute right-5 top-5 text-4xl font-black text-slate-100">0{{ $i + 1 }}</span><span
                         class="grid h-12 w-12 place-items-center rounded-2xl bg-indigo-50 text-indigo-600"><x-icon
@@ -128,9 +127,9 @@
         <div
             class="overflow-hidden rounded-[28px] bg-gradient-to-br from-ink via-indigo-950 to-indigo-800 p-7 text-white sm:p-10 lg:flex lg:items-center lg:justify-between">
             <div>
-                <p class="text-xs font-extrabold uppercase tracking-[.2em] text-indigo-300">Untuk pelaku UMKM</p>
-                <h2 class="mt-3 text-3xl font-black">Ubah inventaris menjadi peluang.</h2>
-                <p class="mt-3 max-w-xl text-sm leading-6 text-indigo-100/70">Kelola produk, stok, jadwal, booking, dan
+                <p class="text-xs font-extrabold uppercase tracking-[.2em] text-indigo-300">Untuk pemilik rental kamera</p>
+                <h2 class="mt-3 text-3xl font-black">Ubah inventaris kamera menjadi peluang.</h2>
+                <p class="mt-3 max-w-xl text-sm leading-6 text-indigo-100/70">Kelola kamera, unit fisik, stok, jadwal, booking, dan
                     pembayaran dalam satu dashboard yang sederhana.</p>
             </div>
             <a href="{{ route('register', ['role' => 'mitra']) }}"

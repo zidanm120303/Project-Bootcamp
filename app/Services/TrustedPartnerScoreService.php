@@ -11,7 +11,7 @@ class TrustedPartnerScoreService
     {
         $completed = $partner->bookings()->where('status', 'completed')->count();
         $total = max(1, $partner->bookings()->count());
-        $cancelRate = $partner->bookings()->whereIn('status', ['cancelled', 'rejected'])->count() / $total;
+        $cancelRate = $partner->bookings()->where('status', 'cancelled')->count() / $total;
         $rating = (float) $partner->reviews()->avg('rating');
 
         $score = 0;

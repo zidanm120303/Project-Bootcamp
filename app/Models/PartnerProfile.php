@@ -11,8 +11,10 @@ class PartnerProfile extends Model
 
     protected $fillable = [
         'user_id', 'business_name', 'business_type', 'owner_name', 'phone',
+        'business_email', 'tax_number', 'bank_name', 'bank_account_number',
+        'bank_account_holder', 'operational_hours', 'pickup_note',
         'address', 'city', 'province', 'postal_code', 'description', 'logo_path',
-        'banner_path', 'verification_status', 'trusted_score', 'is_trusted', 'verified_at',
+        'banner_path', 'verification_status', 'admin_notes', 'trusted_score', 'is_trusted', 'verified_at',
     ];
 
     protected $casts = ['is_trusted' => 'boolean', 'verified_at' => 'datetime'];

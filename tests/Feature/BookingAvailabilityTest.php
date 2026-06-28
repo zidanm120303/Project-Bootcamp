@@ -43,7 +43,7 @@ class BookingAvailabilityTest extends TestCase
         $this->blockingBooking(2);
         $result = app(BookingAvailabilityService::class)->check($this->product, '2026-07-11', '2026-07-13', 1);
         $this->assertTrue($result['available']);
-        $this->assertSame(1, $result['stock']);
+        $this->assertSame('Barang tersedia untuk tanggal yang dipilih.', $result['message']);
     }
 
     public function test_overlapping_booking_rejects_quantity_above_remaining_stock(): void
@@ -51,7 +51,10 @@ class BookingAvailabilityTest extends TestCase
         $this->blockingBooking(2);
         $result = app(BookingAvailabilityService::class)->check($this->product, '2026-07-11', '2026-07-13', 2);
         $this->assertFalse($result['available']);
-        $this->assertSame(1, $result['stock']);
+        $this->assertSame(
+            'Jumlah unit yang dipilih tidak tersedia pada jadwal tersebut. Silakan kurangi jumlah unit atau pilih tanggal lain.',
+            $result['message']
+        );
     }
 
     public function test_blackout_date_is_rejected(): void
@@ -63,7 +66,29 @@ class BookingAvailabilityTest extends TestCase
         $this->assertFalse($result['available']);
     }
 
-    private function blockingBooking(int $qty): Booking
+    public function test_only_active_rental_statuses_reduce_availability(): void
+    {
+        $booking = $this->blockingBooking(2);
+        $availability = app(BookingAvailabilityService::class);
+
+        foreach (Booking::ACTIVE_RENTAL_STATUSES as $status) {
+            $booking->update(['status' => $status]);
+            $this->assertFalse(
+                $availability->check($this->product, '2026-07-11', '2026-07-13', 2)['available'],
+                "Status {$status} harus mengurangi ketersediaan."
+            );
+        }
+
+        foreach (['returned', 'completed', 'cancelled'] as $status) {
+            $booking->update(['status' => $status]);
+            $this->assertTrue(
+                $availability->check($this->product, '2026-07-11', '2026-07-13', 2)['available'],
+                "Status {$status} tidak boleh mengurangi ketersediaan."
+            );
+        }
+    }
+
+    private function blockingBooking(int $quantity): Booking
     {
         $booking = Booking::create([
             'booking_code' => 'TEST-'.uniqid(), 'customer_id' => $this->customer->id,
@@ -72,8 +97,8 @@ class BookingAvailabilityTest extends TestCase
             'platform_fee' => 10000, 'total_amount' => 210000, 'status' => 'confirmed',
         ]);
         $booking->items()->create([
-            'product_id' => $this->product->id, 'qty' => $qty, 'price' => 100000,
-            'price_unit' => 'day', 'duration' => 2, 'start_at' => '2026-07-10',
+            'product_id' => $this->product->id, 'quantity' => $quantity, 'price_per_unit' => 100000,
+            'price_unit' => 'day', 'rental_days' => 2, 'start_at' => '2026-07-10',
             'end_at' => '2026-07-12', 'subtotal' => 200000,
         ]);
 
