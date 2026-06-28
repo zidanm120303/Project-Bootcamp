@@ -32,39 +32,62 @@
 </div>
 
 @if($bookings->count())
-    <div class="grid gap-5 xl:grid-cols-2">
+     <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         @foreach($bookings as $booking)
-            @php $item = $booking->items->first(); @endphp
-            <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-100/50">
-                <div class="h-1.5 {{ match($booking->status) {'completed' => 'bg-emerald-500', 'cancelled','disputed' => 'bg-rose-500', 'ready_pickup','ongoing' => 'bg-blue-500', default => 'bg-indigo-500'} }}"></div>
-                <div class="p-5">
-                    <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-4">
-                        <div class="min-w-0"><p class="flex items-center gap-2 text-xs font-bold text-slate-500"><x-icon name="store" class="h-4 w-4 text-indigo-500" /><span class="truncate">{{ $booking->partner->business_name }}</span></p><p class="mt-1 text-[11px] text-slate-400">{{ $booking->created_at->translatedFormat('d M Y, H:i') }} · {{ $booking->booking_code }}</p></div>
-                        <x-status-badge :status="$booking->status" />
-                    </div>
+    @php $item = $booking->items->first(); @endphp
+    <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-100/50">
 
-                    <div class="mt-4 flex gap-4">
-                        <img src="{{ $item->product->image_url }}" class="h-28 w-32 shrink-0 rounded-2xl object-cover sm:h-32 sm:w-40" alt="{{ $item->product->name }}">
-                        <div class="min-w-0 flex-1">
-                            <h2 class="line-clamp-2 font-black leading-snug text-ink">{{ $item->product->name }}</h2>
-                            <p class="mt-1 text-xs text-slate-400">{{ $item->product->brand }} {{ $item->product->model }} · {{ $item->quantity }} unit</p>
-                            <div class="mt-3 rounded-xl bg-slate-50 p-3 text-xs text-slate-600">
-                                <p class="flex items-center gap-2"><x-icon name="calendar" class="h-4 w-4 text-indigo-500" />{{ $booking->start_at->translatedFormat('d M Y') }} - {{ $booking->end_at->translatedFormat('d M Y') }}</p>
-                                <p class="mt-2 flex items-start gap-2"><x-icon name="location" class="mt-0.5 h-4 w-4 shrink-0 text-indigo-500" /><span class="line-clamp-2">{{ $booking->partner->address }}, {{ $booking->partner->city }}</span></p>
-                                <p class="mt-2 text-[11px] leading-5 text-slate-500">Kontak {{ $booking->partner->phone }} · {{ $booking->partner->operational_hours ?: 'Konfirmasi jam operasional' }}<br>{{ $booking->pickup_note ?: $booking->partner->pickup_note }}</p>
-                            </div>
-                        </div>
-                    </div>
+        {{-- Gambar produk --}}
+        <div class="relative overflow-hidden">
+            <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="aspect-[4/3] w-full object-cover transition group-hover:scale-105">
+            <div class="absolute left-3 top-3"><x-status-badge :status="$booking->status" /></div>
+            <div class="absolute right-3 top-3 rounded-lg bg-white/90 px-2 py-1 text-[10px] font-bold text-slate-600 backdrop-blur">{{ $booking->booking_code }}</div>
+        </div>
 
-                    <div class="mt-4 rounded-xl border border-indigo-100 bg-indigo-50/60 p-3"><p class="text-xs font-extrabold text-indigo-800">{{ $statusLabels[$booking->status] ?? $booking->status }}</p><p class="mt-1 text-xs leading-5 text-indigo-600">{{ $statusHints[$booking->status] ?? 'Pantau detail transaksi untuk informasi terbaru.' }}</p></div>
+        {{-- Deskripsi status di bawah foto --}}
+        <div class="border-b border-indigo-100 bg-indigo-50 px-4 py-2.5">
+            <p class="text-[11px] font-bold text-indigo-700">{{ $statusLabels[$booking->status] ?? $booking->status }}</p>
+            <p class="mt-0.5 line-clamp-2 text-[11px] leading-5 text-indigo-500">{{ $statusHints[$booking->status] ?? '-' }}</p>
+        </div>
 
-                    <div class="mt-4 flex flex-col gap-4 border-t border-slate-100 pt-4 sm:flex-row sm:items-end sm:justify-between">
-                        <div><p class="text-[11px] text-slate-400">Total pembayaran</p><p class="mt-1 text-xl font-black text-ink">Rp{{ number_format($booking->total_amount, 0, ',', '.') }}</p><div class="mt-1"><x-status-badge :status="$booking->payment_status" /></div></div>
-                        <div class="flex gap-2"><a href="{{ route('customer.bookings.invoice', $booking) }}" class="btn-secondary py-2">Invoice</a><a href="{{ route('customer.bookings.show', $booking) }}" class="btn-primary py-2">Lihat detail →</a></div>
-                    </div>
+        {{-- Konten card --}}
+        <div class="p-4">
+            {{-- Nama mitra --}}
+            <p class="flex items-center gap-1.5 text-xs font-bold text-indigo-600">
+                <x-icon name="store" class="h-4 w-4 shrink-0" />
+                {{ $booking->partner->business_name }}
+            </p>
+
+            {{-- Nama produk --}}
+            <h2 class="mt-1.5 line-clamp-2 font-black leading-snug text-ink">{{ $item->product->name }}</h2>
+
+            {{-- Tanggal & lokasi --}}
+            <div class="mt-3 space-y-1.5 text-xs text-slate-500">
+                <p class="flex items-center gap-1.5">
+                    <x-icon name="calendar" class="h-4 w-4 shrink-0 text-indigo-500" />
+                    {{ $booking->start_at->translatedFormat('d M Y') }} → {{ $booking->end_at->translatedFormat('d M Y') }}
+                </p>
+                <p class="flex items-center gap-1.5">
+                    <x-icon name="location" class="h-4 w-4 shrink-0 text-indigo-500" />
+                    {{ $booking->partner->city }}
+                </p>
+            </div>
+
+            {{-- Total & tombol --}}
+            <div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                <div>
+                    <p class="text-[10px] text-slate-400">Total</p>
+                    <p class="text-base font-black text-ink">Rp{{ number_format($booking->total_amount, 0, ',', '.') }}</p>
+                    <div class="mt-1"><x-status-badge :status="$booking->payment_status" /></div>
                 </div>
-            </article>
-        @endforeach
+                <div class="flex gap-2">
+                    <a href="{{ route('customer.bookings.invoice', $booking) }}" class="btn-secondary py-1.5 text-xs">Invoice</a>
+                    <a href="{{ route('customer.bookings.show', $booking) }}" class="btn-primary py-1.5 text-xs">Detail →</a>
+                </div>
+            </div>
+        </div>
+    </article>
+@endforeach
     </div>
     <div class="mt-7">{{ $bookings->links() }}</div>
 @else

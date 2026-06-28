@@ -3,7 +3,7 @@ $role = auth()->user()->role;
 $menus = [
     'customer' => [
         ['customer.dashboard','home','Ringkasan'], ['customer.bookings.index','calendar','Pesanan Saya'],
-        ['catalog','search','Cari Kamera'], ['profile.edit','settings','Profil'],
+        ['catalog','search','Cari Barang'], ['profile.edit','settings','Profil'],
     ],
     'mitra' => [
         ['mitra.dashboard','home','Dashboard'], ['mitra.products.index','box','Kamera & Unit'],
