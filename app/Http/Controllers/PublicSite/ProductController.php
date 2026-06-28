@@ -11,7 +11,7 @@ class ProductController extends Controller
 {
     public function show(Product $product)
     {
-        abort_unless($product->status === 'active', 404);
+        abort_unless($product->status === 'active' && $product->partner->verification_status === 'verified', 404);
         $product->load(['partner', 'category', 'images', 'reviews.customer']);
 
         return view('public.product', [
@@ -26,25 +26,34 @@ class ProductController extends Controller
         $data = $request->validate([
             'start_at' => ['required', 'date', 'after_or_equal:today'],
             'end_at' => ['required', 'date', 'after:start_at'],
-            'qty' => ['required', 'integer', 'min:1'],
+            'quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        return response()->json($availability->check($product, $data['start_at'], $data['end_at'], $data['qty']));
+        return response()->json($availability->check($product, $data['start_at'], $data['end_at'], $data['quantity']));
     }
 
-    public function checkout(Request $request, Product $product, \App\Services\BookingPriceService $prices)
-    {
-        abort_unless($product->status === 'active', 404);
+    public function checkout(
+        Request $request,
+        Product $product,
+        \App\Services\BookingPriceService $prices,
+        BookingAvailabilityService $availability
+    ) {
+        abort_unless($product->status === 'active' && $product->partner->verification_status === 'verified', 404);
         $data = $request->validate([
             'start_at' => ['required', 'date', 'after_or_equal:today'],
             'end_at' => ['required', 'date', 'after:start_at'],
-            'qty' => ['required', 'integer', 'min:1'],
+            'quantity' => ['required', 'integer', 'min:1'],
         ]);
+        $check = $availability->check($product, $data['start_at'], $data['end_at'], $data['quantity']);
+
+        if (! $check['available']) {
+            return back()->withErrors(['quantity' => $check['message']])->withInput();
+        }
 
         return view('public.checkout', [
             'product' => $product->load('partner', 'primaryImage'),
             'bookingData' => $data,
-            'price' => $prices->calculate($product, $data['start_at'], $data['end_at'], $data['qty']),
+            'price' => $prices->calculate($product, $data['start_at'], $data['end_at'], $data['quantity']),
         ]);
     }
 }

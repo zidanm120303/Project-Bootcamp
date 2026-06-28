@@ -1,8 +1,8 @@
 @extends('layouts.public')
-@section('title', 'Katalog Produk & Jasa — Rentra UMKM')
+@section('title', 'Katalog Rental Kamera — RentalPro')
 @section('content')
 <section class="border-b border-slate-200 bg-gradient-to-br from-indigo-50 to-white py-10">
-    <div class="container-app"><p class="section-kicker">Marketplace UMKM</p><h1 class="section-title">Temukan kebutuhan terbaik Anda</h1><p class="mt-3 text-sm text-slate-500">{{ $products->total() }} produk dan jasa tersedia dari mitra terverifikasi.</p></div>
+    <div class="container-app"><p class="section-kicker">Marketplace rental kamera</p><h1 class="section-title">Temukan peralatan produksi Anda</h1><p class="mt-3 text-sm text-slate-500">{{ $products->total() }} kamera dan peralatan tersedia dari toko terverifikasi.</p></div>
 </section>
 <section class="container-app py-8">
     <form action="{{ route('catalog') }}" class="grid gap-6 lg:grid-cols-[260px_1fr]">
@@ -12,7 +12,7 @@
                 <div><label class="label">Kata kunci</label><input name="q" value="{{ request('q') }}" class="input" placeholder="Cari produk..."></div>
                 <div><label class="label">Lokasi</label><select name="city" class="input"><option value="">Semua lokasi</option>@foreach($cities as $city)<option @selected(request('city') === $city)>{{ $city }}</option>@endforeach</select></div>
                 <div><label class="label">Kategori</label><select name="category" class="input"><option value="">Semua kategori</option>@foreach($categories as $category)<option value="{{ $category->slug }}" @selected(request('category') === $category->slug)>{{ $category->name }}</option>@endforeach</select></div>
-                <div><label class="label">Jenis</label><div class="grid grid-cols-3 gap-2">@foreach(['rental'=>'Sewa','service'=>'Jasa','sale'=>'Jual'] as $value=>$label)<label class="cursor-pointer"><input class="peer sr-only" type="radio" name="type" value="{{ $value }}" @checked(request('type')===$value)><span class="block rounded-lg border border-slate-200 px-2 py-2 text-center text-xs font-bold peer-checked:border-indigo-500 peer-checked:bg-indigo-50 peer-checked:text-indigo-700">{{ $label }}</span></label>@endforeach</div></div>
+                <input type="hidden" name="type" value="rental">
                 <div><label class="label">Rentang harga</label><div class="grid grid-cols-2 gap-2"><input name="min_price" value="{{ request('min_price') }}" type="number" class="input px-3" placeholder="Minimum"><input name="max_price" value="{{ request('max_price') }}" type="number" class="input px-3" placeholder="Maksimum"></div></div>
                 <div><label class="label">Rating minimal</label><select name="rating" class="input"><option value="">Semua rating</option>@foreach([4,4.5,4.8] as $rating)<option value="{{ $rating }}" @selected(request('rating')==$rating)>★ {{ $rating }}+</option>@endforeach</select></div>
                 <label class="flex items-center gap-3 text-sm font-semibold text-slate-600"><input type="checkbox" name="trusted" value="1" @checked(request('trusted')) class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">Mitra terpercaya saja</label>

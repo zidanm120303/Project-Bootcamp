@@ -14,6 +14,13 @@ class ProductPolicy
 
     public function delete(User $user, Product $product): bool
     {
-        return $this->update($user, $product) && ! $product->bookingItems()->whereHas('booking', fn ($q) => $q->whereIn('status', ['confirmed', 'waiting_payment', 'paid', 'prepared', 'ongoing']))->exists();
+        return $this->update($user, $product)
+            && ! $product->hasActiveBookings()
+            && ! $product->hasBookingHistory();
+    }
+
+    public function changeStatus(User $user, Product $product): bool
+    {
+        return $this->update($user, $product) && ! $product->hasActiveBookings();
     }
 }

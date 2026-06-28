@@ -21,6 +21,19 @@ class User extends Authenticatable
         'name',
         'email',
         'phone',
+        'avatar_path',
+        'date_of_birth',
+        'gender',
+        'profession',
+        'address',
+        'city',
+        'province',
+        'postal_code',
+        'identity_type',
+        'identity_number',
+        'identity_file',
+        'emergency_contact_name',
+        'emergency_contact_phone',
         'password',
         'role',
         'status',
@@ -43,6 +56,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'date_of_birth' => 'date',
         'password' => 'hashed',
     ];
 
@@ -59,5 +73,10 @@ class User extends Authenticatable
     public function isRole(string $role): bool
     {
         return $this->role === $role;
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        return $this->avatar_path ? asset('storage/'.$this->avatar_path) : null;
     }
 }

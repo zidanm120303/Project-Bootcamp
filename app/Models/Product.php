@@ -4,18 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
-        'partner_id', 'category_id', 'name', 'slug', 'product_type', 'description',
-        'price', 'price_unit', 'stock_total', 'min_rent_duration', 'max_rent_duration',
+        'partner_id', 'category_id', 'name', 'brand', 'model', 'camera_type',
+        'sensor_type', 'resolution_mp', 'video_resolution', 'lens_mount',
+        'condition_label', 'included_accessories', 'rental_terms', 'slug',
+        'product_type', 'description', 'price', 'security_deposit', 'replacement_value',
+        'price_unit', 'stock_total', 'min_rent_duration', 'max_rent_duration',
         'location_city', 'location_address', 'status', 'admin_notes', 'is_featured',
         'average_rating', 'total_reviews',
     ];
 
     protected $casts = [
-        'price' => 'decimal:2', 'average_rating' => 'decimal:2', 'is_featured' => 'boolean',
+        'price' => 'decimal:2',
+        'security_deposit' => 'decimal:2',
+        'replacement_value' => 'decimal:2',
+        'resolution_mp' => 'decimal:2',
+        'average_rating' => 'decimal:2',
+        'is_featured' => 'boolean',
     ];
 
     public function getRouteKeyName()
@@ -25,7 +36,8 @@ class Product extends Model
 
     public function scopeActive(Builder $query)
     {
-        return $query->where('status', 'active');
+        return $query->where('status', 'active')
+            ->whereHas('partner', fn ($partner) => $partner->where('verification_status', 'verified'));
     }
 
     public function partner()
@@ -71,6 +83,18 @@ class Product extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function hasActiveBookings(): bool
+    {
+        return $this->bookingItems()
+            ->whereHas('booking', fn ($query) => $query->whereIn('status', Booking::ACTIVE_RENTAL_STATUSES))
+            ->exists();
+    }
+
+    public function hasBookingHistory(): bool
+    {
+        return $this->bookingItems()->exists();
     }
 
     public function getImageUrlAttribute(): string

@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class BookingItem extends Model
 {
     protected $fillable = [
-        'booking_id', 'product_id', 'product_unit_id', 'qty', 'price', 'price_unit',
-        'duration', 'start_at', 'end_at', 'subtotal', 'item_status',
+        'booking_id', 'product_id', 'product_unit_id', 'quantity', 'price_per_unit', 'price_unit',
+        'rental_days', 'start_at', 'end_at', 'subtotal', 'item_status',
     ];
 
     protected $casts = [
-        'start_at' => 'datetime', 'end_at' => 'datetime', 'price' => 'decimal:2', 'subtotal' => 'decimal:2',
+        'start_at' => 'datetime', 'end_at' => 'datetime', 'price_per_unit' => 'decimal:2', 'subtotal' => 'decimal:2',
     ];
 
     public function booking()

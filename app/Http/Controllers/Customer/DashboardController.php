@@ -14,7 +14,7 @@ class DashboardController extends Controller
         return view('customer.dashboard', [
             'recentBookings' => (clone $bookings)->limit(5)->get(),
             'stats' => [
-                'active' => (clone $bookings)->whereIn('status', ['confirmed', 'waiting_payment', 'paid', 'prepared', 'ongoing'])->count(),
+                'active' => (clone $bookings)->whereIn('status', Booking::ACTIVE_RENTAL_STATUSES)->count(),
                 'waitingPayment' => (clone $bookings)->where('payment_status', 'unpaid')->count(),
                 'completed' => (clone $bookings)->where('status', 'completed')->count(),
                 'reviews' => \App\Models\Review::where('customer_id', auth()->id())->count(),
